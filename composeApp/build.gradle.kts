@@ -16,12 +16,11 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -35,26 +34,22 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "composeApp"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
+                    // Serve sources to debug inside browser
+                    static(rootDirPath)
+                    static(projectDirPath)
                 }
             }
         }
         binaries.executable()
     }
 
-    js(IR) {
-        moduleName = "composeApp"
+    js {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
@@ -64,7 +59,7 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
+        val desktopMain = getByName("desktopMain")
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -82,6 +77,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.icons.core)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -105,15 +101,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.client.okhttp)
         }
-        val wasmJsMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.js)
-            }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
-        val jsMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.js)
-            }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }
@@ -140,8 +132,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

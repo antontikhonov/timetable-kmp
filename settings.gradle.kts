@@ -1,5 +1,4 @@
 rootProject.name = "Timetable-KMP"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
