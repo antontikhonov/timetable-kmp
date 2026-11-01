@@ -1,10 +1,10 @@
 package ru.antontikhonov.timetable_kmp.data.repository
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import ru.antontikhonov.timetable_kmp.domain.repositores.CurrentTimeProvider
+import kotlin.time.Clock
 
 class CurrentTimeProviderImpl : CurrentTimeProvider {
 
